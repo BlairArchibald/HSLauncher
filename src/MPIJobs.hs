@@ -27,11 +27,11 @@ modMPI hosts uid (Job n c) = Job n mpiJob'
   where
     outF   = createOutputFile c uid
     -- We modify all pre/post commands to putput to the file
-    preCommands'  = map (\x -> x ++ " 2>&1 > " ++ outF) (preCommands c)
-    postCommands' = map (\x -> x ++ " 2>&1 > " ++ outF) (postCommands c)
+    preCommands'  = map (\x -> x ++ " 2>&1 >> " ++ outF) (preCommands c)
+    postCommands' = map (\x -> x ++ " 2>&1 >> " ++ outF) (postCommands c)
 
     mpiCmd = "mpiexec -n " ++ show n ++ " -hosts " ++ intercalate "," hosts ++ " " ++ mpiArgs c
-    cmd'   = intercalate " " [mpiCmd, cmd c, "2>&1 >", outF]
+    cmd'   = intercalate " " [mpiCmd, cmd c, "2>&1 >>", outF]
 
     mpiJob' = c {
       preCommands  = preCommands'

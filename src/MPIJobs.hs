@@ -18,9 +18,9 @@ data MPIJob = MPIJob {
 -- We assume bash style commands
 instance CommandBuilder MPIJob where
   toCommand j =
-       unlines (map (++ ";") (preCommands j))
+       unwords (map (++ ";") (preCommands j))
     ++ cmd j
-    ++ unlines (map (++ ";") (postCommands j))
+    ++ unwords (map (++ ";") (postCommands j))
 
 modMPI :: CommandModifier MPIJob
 modMPI hosts uid (Job n c) = Job n mpiJob'

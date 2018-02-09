@@ -80,12 +80,13 @@ runJobs mod nodes jobs = do
          go uid chan [] (avail:freeNodes)
 
    runJob job nodes uid chan = do
-      runSSH_ (head nodes) (command $ mod nodes uid job)
+      let cmd = command $ mod nodes uid job
+      print $ "Running: ssh -A " ++ (head nodes) ++ " " ++ cmd
+      runSSH_ (head nodes) cmd
       mapM_ (writeChan chan) nodes
 
 runSSH_ :: Host -> Command -> IO ()
 runSSH_ host cmd = do
   let cmd' = "ssh -A " ++ host ++ " " ++ cmd
-  print $ "Running: " ++ cmd'
   spawnCommand cmd' >>= waitForProcess
   threadDelay (2 * 10^6)
